@@ -6,7 +6,7 @@ exports.createProduct = (req, res, next) => {
         ...req.body
     });
     product.save()
-        .then(res.status(201).json({ message: 'Sauce créé !'}))
+        .then(() => res.status(201).json({ message: 'Sauce créé !'}))
         .catch(error => res.status(400).json({ error }));
 };
 

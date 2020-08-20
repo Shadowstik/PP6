@@ -7,7 +7,7 @@ const userRoutes = require('./routes/User');
 
 const app = express();
 
-mongoose.connect('mongodb+srv://daocam:daop6@cluster0.duizs.mongodb.net/test?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://dao:daop6@cluster0.duizs.mongodb.net/test?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -25,4 +25,4 @@ app.use(bodyParser.json());
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
-;module.exports = app;
+module.exports = app;

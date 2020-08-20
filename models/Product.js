@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Schéma des sauces pour le stockage dans la base de données
 const productSchema = mongoose.Schema({
     userId: { type: String, required: true}, 
     name: { type: String, required: true},
