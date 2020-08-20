@@ -1,39 +1,39 @@
-const Product = require('../models/Product');
+const Sauce = require('../models/Sauce');
 const fs = require('fs');
 
 exports.createProduct = (req, res, next) => {
-    const productObject = JSON.parse(req.body.sauce);
-    delete productObject._id;
-    const product = new Product({
-        ...productObject,
+    const sauceObject = JSON.parse(req.body.sauce);
+    delete sauceObject._id;
+    const sauce = new Sauce({
+        ...sauceObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         likes: 0,
         dislikes: 0,
         usersLiked: [],
         usersDisliked: []
     });
-    product.save()
+    sauce.save()
         .then(() => res.status(201).json({ message: 'Sauce créé !'}))
         .catch(error => res.status(400).json({ error }));
 };
 
 exports.modifyProduct = (req, res, next) => {
-    const productObject = req.file ?
+    const sauceObject = req.file ?
     {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body};
-        Product.updateOne({ _id: req.params.id}, { ...productObject, _id: req.params.id})
+    Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
         .then(() => res.status(200).json({ message: 'Sauce modifiée !'}))
         .catch(error => res.status(400).json({ error }));
 };
 
 exports.deleteProduct = (req, res, next) => {
-    Product.findOne({ _id: req.params.id})
-        .then(product => {
-            const filename = product.imageUrl.split('/images/')[1];
+    Sauce.findOne({ _id: req.params.id})
+        .then(sauce => {
+            const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
-                Product.deleteOne({ _id: req.params.id})
+                Sauce.deleteOne({ _id: req.params.id})
                     .then(() => res.status(200).json({ message: 'Sauce supprimée !'}))
                     .catch(error => res.status(400).json({ error }));
             });
@@ -42,14 +42,14 @@ exports.deleteProduct = (req, res, next) => {
 };
 
 exports.getOneProduct = (req, res, next) => {
-    Product.findOne({ _id: req.params.id})
-        .then(product => res.status(200).json(product))
+    Sauce.findOne({ _id: req.params.id})
+        .then(sauce => res.status(200).json(sauce))
         .catch(error => res.status(404).json({ error }));
 };
 
 exports.getAllProducts = (req, res, next) => {
-    Product.find()
-        .then(products => res.status(200).json(products))
+    Sauce.find()
+        .then(sauces => res.status(200).json(sauces))
         .catch(error => res.status(400).json({ error }));
 };
 
@@ -57,12 +57,12 @@ exports.likeOrDislike = (req, res, next) => {
     const like = req.body.like;
     const userId = req.body.userId;
 
-    Product.findOne({ _id: req.params.id })
-        .then(product => {
-            nbLikes = product.likes;
-            nbDislikes = product.dislikes;
-            arrayUsersLiked = product.usersLiked;
-            arrayUsersDisliked = product.usersDisliked;
+    Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+            nbLikes = sauce.likes;
+            nbDislikes = sauce.dislikes;
+            arrayUsersLiked = sauce.usersLiked;
+            arrayUsersDisliked = sauce.usersDisliked;
             if (like === 0) {
                 //verifie si l'utilisateur est présent dans le tableau de usersLiked
                 if (arrayUsersLiked.filter(user => user === userId)[0] === userId) {
@@ -86,7 +86,7 @@ exports.likeOrDislike = (req, res, next) => {
                 arrayUsersDisliked.push(userId);
             }
             //upadte la sauce avec le nouveau nombre de likes/dislikes et le tableau de usersLiked/usersDisliked
-            Product.updateOne({ _id: req.params.id }, {  
+            Sauce.updateOne({ _id: req.params.id }, {  
                 likes: nbLikes,
                 usersLiked: arrayUsersLiked,
                 dislikes: nbDislikes,
