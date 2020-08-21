@@ -4,11 +4,20 @@ require('dotenv').config(); // permet de cacher les données personnelles de l'u
 const bodyParser = require('body-parser'); // convertit le corps des requêtes en objet JS
 const mongoose = require('mongoose');
 const path = require('path'); // renvoie le chemin des fichiers
+const helmet = require('helmet'); // sécurise les middlewares de l'app
+const xss = require('xss-clean'); // nettoie les entrées utilisateurs provenant des POST et GET
+
 
 const sauceRoutes = require('./routes/Sauce');
 const userRoutes = require('./routes/User');
 
 const app = express();
+
+// utilise les middlewares sécurisé de helmet (contient xss-filter contre injection HTML/Script)
+app.use(helmet()); 
+
+// nettoie toute les données des requêtes
+app.use(xss());
 
 // empêche les erreurs de CORS pour que toute les requêtes soient acceptées
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`,
