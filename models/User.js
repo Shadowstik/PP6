@@ -7,6 +7,7 @@ const userSchema = mongoose.Schema({
     password: { type: String, required: true }
 });
 
-userSchema.plugin(uniqueValidator);
+// empêche que plusieurs utilisateurs s'enregistre avec le même email
+userSchema.plugin(uniqueValidator); 
 
 module.exports = mongoose.model('User', userSchema);

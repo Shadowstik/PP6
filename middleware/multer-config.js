@@ -6,14 +6,15 @@ const MIME_TYPES = {
     'image/png': 'png'
 };
 
-const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
+// enregistrement dans le disque
+const storage = multer.diskStorage({ 
+    destination: (req, file, callback) => { // la destination du fichier enregistré
         callback(null, 'images')
     },
-    filename: (req, file, callback) => {
+    filename: (req, file, callback) => { // génération du nom du fichier 
         const name = file.originalname.split(' ').join('_');
-        const extension = MIME_TYPES[file.mimetype];
-        callback(null, name + Date.now() + '.' + extension);
+        const extension = MIME_TYPES[file.mimetype]; // extension du fichier ajouté
+        callback(null, name + Date.now() + '.' + extension); // nom du fichier + numéro unique + extension
     }
 });
 
